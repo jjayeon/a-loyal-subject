@@ -16,22 +16,22 @@ const game = {
     },
     days: 1,
     options: {
-	// total more than 10 breaks game because ordinals
-	rebels_per_day: 1,
+	// total more than 20 breaks game because ordinals
+	rebels_per_day: 2,
 	loyalists_per_day: 3,
-	random_per_day: 3,
-        rebel_chance: 0.1,
+	random_per_day: 1,
+        rebel_chance: 0.2,
 
         rebels_days_to_win: 3,
 	loyalists_days_to_win: 4,
 
-	stutter_chance: 0.5,
+	stutter_chance: 0.7,
 	compromised_chance: 0.3,
 
 	item_max_rating: 10,
-	items_initial: 7,
+	items_initial: 8,
 	items_min: 4,
-	items_new: 4,
+	items_new: 5,
     }
 }
 game.player.getNewItems(game.options.items_initial)
@@ -52,7 +52,7 @@ function play() {
             loyalists_count: game.options.loyalists_per_day,
         }
 	for (let i = 0; i < game.options.random_per_day; i++) {
-	    if (Math.random() < 0.5) day.rebels_count += 1
+	    if (Math.random() < game.options.rebel_chance) day.rebels_count += 1
 	    else day.loyalists_count += 1
 	}
         function startAdventurer() {
@@ -64,7 +64,7 @@ function play() {
 	        adventurer_faction = "rebels";
 	        day.rebels_count--;
 	    } else {
-	        adventurer_faction = Math.random() < game.options.rebel_chance ? "rebels" : "loyalists"
+	        adventurer_faction = Math.random() < 0.5 ? "rebels" : "loyalists"
 	        if (adventurer_faction === "rebels") {
 		    day.rebels_count--;
 	        } else {
@@ -77,7 +77,7 @@ function play() {
 		    phrase = randItem(text.cryptic_phrases)
 	        } else if (adventurer_faction === "loyalists") {
 		    phrase = randItem(text.cryptic_phrases)
-                    let word = randItem(text.code_words.filter(x => x !== day.code_word))
+                    let word = randItem(text.code_words)
 		    if (Math.random() < game.options.stutter_chance) {
 		        phrase = phrase.replace(" *", `, uh... ${word}`)
 		    } else {
@@ -103,7 +103,7 @@ function play() {
                     print(`You give the adventurer your ${item.name}.`)
                     if (game.player.inventory.length <= game.options.items_min) {
 	                game.player.getNewItems(game.options.items_new)
-	                print("You get a new shipment of items.\n")
+	                print(text.new_shipment)
 	            }
 	            day.count++
                     if (day.rebels_count > 0 || day.loyalists_count > 0) {
@@ -119,18 +119,20 @@ function play() {
     function endDay(day) {
         print("The day comes to an end.")
         if (day.rebels === day.loyalists) {
-	    print("The two sides have reached a bloody stalemate for the day.")
+	    print(text.stalemate)
         } else {
 	    let winners = day.rebels > day.loyalists ? "rebels" : "loyalists"
             game.score[winners]++
+            if (winners === "rebels") winners = "Rebels"
+            if (winners === "loyalists") winners = "Loyalists"
 	    print(`The ${winners} have won the day with their superior equipment.`)
         }
         // game end
         if (game.score.loyalists === game.options.loyalists_days_to_win) {
-	    print("The loyalists have suppressed the rebellion. You pray they have not discovered your treachery.")
+	    print(text.loyalist_win)
         }
         else if (game.score.rebels === game.options.rebels_days_to_win) {
-	    print("The rebels have overthrown the monarchy. Your country has a bright future ahead.")
+	    print(text.rebel_win)
         }
         else {
             button("Continue...", startDay)
@@ -145,5 +147,5 @@ function randItem(list) {
 
 
 clear()
-print(text.instructions.replace("\n", "<br>"))
+text.instructions.forEach(print)
 button("Continue...", play)
