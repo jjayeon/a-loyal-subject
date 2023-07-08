@@ -20,7 +20,7 @@ let text = {
     "ordinals": ["zeroth", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eight", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixtheenth", "seventeenth", "eighteenth", "nineteenth", "twentieth"]
 }
 
-function print(text) {
+function display(text) {
     let p = document.createElement("p")
     p.style.opacity = 0
     p.innerHTML = text

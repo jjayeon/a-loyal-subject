@@ -40,7 +40,7 @@ function play() {
     clear()
     function startDay() {
         clear()
-        print(`The ${text.ordinals[game.days]} day begins.`)
+        display(`The ${text.ordinals[game.days]} day begins.`)
         game.days++
         let day = {
             count: 1,
@@ -92,18 +92,18 @@ function play() {
 	        }
 	    }
 	    phrase = phrase.replace("*", day.code_word)
-            print(`The ${text.ordinals[day.count]} adventurer walks into your shop.`)
-            print(`The adventurer speaks: "${phrase}"`)
-            print(`What item will you sell them?`)
+            display(`The ${text.ordinals[day.count]} adventurer walks into your shop.`)
+            display(`The adventurer speaks: "${phrase}"`)
+            display(`What item will you sell them?`)
             game.player.inventory.forEach((x, i) => {
                 button(`${x.name} (rating ${x.rating})`, () => {
                     let item = game.player.inventory.splice(i, 1)[0]
 	            day[adventurer_faction] += item.rating
                     clear()
-                    print(`You give the adventurer your ${item.name}.`)
+                    display(`You give the adventurer your ${item.name}.`)
                     if (game.player.inventory.length <= game.options.items_min) {
 	                game.player.getNewItems(game.options.items_new)
-	                print(text.new_shipment)
+	                display(text.new_shipment)
 	            }
 	            day.count++
                     if (day.rebels_count > 0 || day.loyalists_count > 0) {
@@ -117,22 +117,22 @@ function play() {
         startAdventurer()
     } // startDay
     function endDay(day) {
-        print("The day comes to an end.")
+        display("The day comes to an end.")
         if (day.rebels === day.loyalists) {
-	    print(text.stalemate)
+	    display(text.stalemate)
         } else {
 	    let winners = day.rebels > day.loyalists ? "rebels" : "loyalists"
             game.score[winners]++
             if (winners === "rebels") winners = "Rebels"
             if (winners === "loyalists") winners = "Loyalists"
-	    print(`The ${winners} have won the day with their superior equipment.`)
+	    display(`The ${winners} have won the day with their superior equipment.`)
         }
         // game end
         if (game.score.loyalists === game.options.loyalists_days_to_win) {
-	    print(text.loyalist_win)
+	    display(text.loyalist_win)
         }
         else if (game.score.rebels === game.options.rebels_days_to_win) {
-	    print(text.rebel_win)
+	    display(text.rebel_win)
         }
         else {
             button("Continue...", startDay)
@@ -147,5 +147,5 @@ function randItem(list) {
 
 
 clear()
-text.instructions.forEach(print)
+text.instructions.forEach(display)
 button("Continue...", play)
