@@ -17,10 +17,10 @@ const game = {
     days: 1,
     options: {
 	// total more than 10 breaks game because ordinals
-	rebels_per_day: 1,
+	rebels_per_day: 2,
 	loyalists_per_day: 3,
-	random_per_day: 3,
-        rebel_chance: 0.1,
+	random_per_day: 1,
+        rebel_chance: 0.2,
 
         rebels_days_to_win: 3,
 	loyalists_days_to_win: 4,
