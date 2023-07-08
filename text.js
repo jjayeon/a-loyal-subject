@@ -8,13 +8,15 @@ let text = {
     "compromise_phrases": ["Don't buy any * today. They're spoiled.", "We got a shipment of * today, but we had to send them back.", "The * weren't outside today. Very unfortunate.", "The * have fled. The day is ruined.", "If you see any * today, don't approach them. They're poisonous."],
     "adjectives": ["Bloody", "Cool", "Epic", "Angry", "Masterful", "Dextrous", "Aggressive", "Charming", "Novel", "Your Mom's"],
     "nouns": ["Sword", "Shield", "Potion", "Bow", "Crossbow", "Axe", "Mace", "Chestplate", "Gauntlets", "Ribbon", "Laurel"],
-    "ordinals": ["zeroth", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eight", "ninth", "tenth"]
+    "ordinals": ["zeroth", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eight", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixtheenth", "seventeenth", "eighteenth", "nineteenth", "twentieth"]
 }
 
 function print(text) {
     let p = document.createElement("p")
+    p.style.opacity = 0
     p.innerHTML = text
     output.appendChild(p)
+    unfade(p)
 }
 
 function clear() {
@@ -23,9 +25,25 @@ function clear() {
 }
 
 function button(text, callback) {
+    let li = document.createElement("li")
+    li.style.opacity = 0
     let btn = document.createElement("button")
     btn.innerHTML = text
     btn.onclick = callback
-    input.appendChild(btn)
+    li.appendChild(btn)
+    input.appendChild(li)
+    unfade(li)
 }
 
+function unfade(element) {
+    let op = 0;  // initial opacity
+    element.style.display = 'block';
+    let timer = setInterval(function () {
+        if (op >= 1){
+            clearInterval(timer);
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op += 0.03;
+    }, 33);
+}
