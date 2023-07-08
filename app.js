@@ -8,6 +8,9 @@ const game = {
 	            rating: 1 + Math.floor(Math.random() * game.options.item_max_rating),
 	        })
             }
+            game.player.inventory.sort((a, b) => {
+                return a.rating - b.rating
+            })
         }
     },
     score: {
