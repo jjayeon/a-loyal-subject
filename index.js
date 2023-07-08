@@ -5,7 +5,7 @@ const fs = require("fs")
 
 const text = JSON.parse(fs.readFileSync("text.json", "utf-8"))
 
-let game = {
+const game = {
     player: {
 	inventory: [],
     },
@@ -30,74 +30,42 @@ let game = {
 	items_new: 4,
     }
 }
-for (let i = 0; i < game.options.items_initial; i++) {
-    game.player.inventory.push({
-	name: randItem(text.adjectives) + " " + randItem(text.nouns),
-	rating: 1 + Math.floor(Math.random() * game.options.item_max_rating),
-    })
+
+function getNewItems(n) {
+    for (let i = 0; i < n; i++) {
+	game.player.inventory.push({
+	    name: randItem(text.adjectives) + " " + randItem(text.nouns),
+	    rating: 1 + Math.floor(Math.random() * game.options.item_max_rating),
+	})
+    }
 }
+getNewItems(game.options.items_initial)
 
 console.log(text.instructions)
 prompt("Press ENTER to continue...")
 
-main:
-while (true) {
+let loop = true
+while (loop) {
     console.log("~~~~~~~~~~~~~~~~~")
     console.log("You wake up bright and early the next day.")
-    // new day
-    // code word
-    const day = {
-	count: 1,
-	code_word: randItem(text.code_words),
-	compromised: Math.random() < game.options.compromised_chance,
-	rebels: 0,
-	loyalists: 0,
-	rebels_count: game.options.rebels_per_day,
-	loyalists_count: game.options.loyalists_per_day,
-    }
-    for (let i = 0; i < game.options.random_per_day; i++) {
-	if (Math.random() < 0.5) day.rebels_count += 1
-	else day.loyalists_count += 1
-    }
-
-    while (day.rebels_count > 0 || day.loyalists_count > 0) {
-	// new adventurer
-	let adventurer_faction
-	if (day.rebels_count === 0) {
-	    adventurer_faction = "loyalists";
-	    day.loyalists_count--;
-	} else if (day.loyalists_count === 0) {
-	    adventurer_faction = "rebels";
-	    day.rebels_count--;
-	} else {
-	    adventurer_faction = Math.random() < 0.5 ? "rebels" : "loyalists"
-	    if (adventurer_faction === "rebels") {
-		day.rebels_count--;
-	    } else {
-		day.loyalists_count--;
-	    }
+    function newDay() {
+	const day = {
+	    count: 1,
+	    code_word: randItem(text.code_words),
+	    compromised: Math.random() < game.options.compromised_chance,
+	    rebels: 0,
+	    loyalists: 0,
+	    rebels_count: game.options.rebels_per_day,
+	    loyalists_count: game.options.loyalists_per_day,
 	}
-
-	// your inventory
-	if (game.player.inventory.length <= game.options.items_min) {
-	    console.log("You get a new shipment of items.\n")
-	    wait(1)
-	    for (let i = 0; i < game.options.items_new; i++) {
-		game.player.inventory.push({
-		    name: randItem(text.adjectives) + " " + randItem(text.nouns),
-		    rating: 1 + Math.floor(Math.random() * game.options.item_max_rating),
-		})
-	    }
+	for (let i = 0; i < game.options.random_per_day; i++) {
+	    if (Math.random() < 0.5) day.rebels_count += 1
+	    else day.loyalists_count += 1
 	}
-
-	console.log("Your inventory:")
-	game.player.inventory.forEach((x, i) => {
-	    console.log(`  ${i}: ${x.name} (rating ${x.rating})`)
-	})
-	console.log()
-	wait(2)
-
-	// come up with phrase
+	return day
+    }
+    const day = newDay()
+    function createAdventurerPrompt(day, adventurer_faction) {
 	let phrase
 	if (!day.compromised) {
 	    if (adventurer_faction === "rebels") {
@@ -118,23 +86,57 @@ while (true) {
 	    }
 	}
 	phrase = phrase.replace("*", day.code_word)
-	console.log(`A ${text.ordinals[day.count]} adventurer walks into your shop.`)
-	console.log("The adventurer speaks...")
-	wait(1)
-	console.log(`\n${phrase}\n`)
-	wait(1)
+
+	return `A ${text.ordinals[day.count]} adventurer walks into your shop.\n` +
+	    `The adventurer speaks...` +
+	    `\n${phrase}\n`
+    }
+    function adventurerArrives(day) {
+	let adventurer_faction
+	if (day.rebels_count === 0) {
+	    adventurer_faction = "loyalists";
+	    day.loyalists_count--;
+	} else if (day.loyalists_count === 0) {
+	    adventurer_faction = "rebels";
+	    day.rebels_count--;
+	} else {
+	    adventurer_faction = Math.random() < 0.5 ? "rebels" : "loyalists"
+	    if (adventurer_faction === "rebels") {
+		day.rebels_count--;
+	    } else {
+		day.loyalists_count--;
+	    }
+	}
+
+	if (game.player.inventory.length <= game.options.items_min) {
+	    getNewItems(game.options.items_new)
+	    console.log("You get a new shipment of items.\n")
+	    wait(1)
+	}
+	console.log("Your inventory:")
+	game.player.inventory.forEach((x, i) => {
+	    console.log(`  ${i}: ${x.name} (rating ${x.rating})`)
+	})
+	console.log()
+	wait(2)
+
+	const adventurerPrompt = createAdventurerPrompt(day, adventurer_faction)
+	console.log(adventurerPrompt)
 
 	let input
 	while (isNaN(input)) {
 	    input = parseInt(prompt("Which item do you want to give them? "))
-	} 
-	if (input === -1) break main
+	}
+	if (input === -1) process.exit()
 
 	let item = game.player.inventory.splice(input, 1)[0]
 	day[adventurer_faction] += item.rating
 	console.log(`You give the adventurer your ${item.name}.`)
 	day.count++
 	wait(1)
+    }
+    while (day.rebels_count > 0 || day.loyalists_count > 0) {
+	adventurerArrives(day)
     }
 
     console.log("The day comes to an end.")
@@ -149,11 +151,11 @@ while (true) {
     // game end
     if (game.score.loyalists === game.options.days_to_win) {
 	console.log("The loyalists have suppressed the rebellion. You pray they have not discovered your treachery.")
-	break
+	loop = false
     }
     if (game.score.rebels === game.options.days_to_win) {
 	console.log("The rebels have overthrown the monarchy. Your country has a bright future ahead.")
-	break
+	loop = false
     }
 }
 
