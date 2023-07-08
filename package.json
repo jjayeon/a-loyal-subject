@@ -1,0 +1,24 @@
+{
+    "name": "shopkeeper-game",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/jjayeon/shopkeeper-game.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/jjayeon/shopkeeper-game/issues"
+    },
+    "homepage": "https://github.com/jjayeon/shopkeeper-game#readme",
+    "dependencies": {
+        "prompt-sync": "^4.2.0"
+    }
+}
