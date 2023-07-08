@@ -40,7 +40,7 @@ function play() {
     clear()
     function startDay() {
         clear()
-        display(`The ${text.ordinals[game.days]} day begins.`)
+        display(`The ${text.ordinals[game.days]} day begins. The code word has changed.`)
         game.days++
         let day = {
             count: 1,
