@@ -23,13 +23,13 @@ const game = {
 	rebels_per_day: 2,
 	loyalists_per_day: 4,
 	random_per_day: 1,
-        rebel_chance: 0.4,
+        rebel_chance: 0.3,
 
         rebels_days_to_win: 3,
 	loyalists_days_to_win: 4,
 
 	stutter_chance: 0.5,
-	compromised_chance: 0.4,
+	compromised_chance: 0.3,
 
 	item_max_rating: 10,
 	items_initial: 8,
