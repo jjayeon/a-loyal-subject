@@ -30,6 +30,7 @@ const game = {
 
 	stutter_chance: 0.5,
 	compromised_chance: 0.3,
+        compromise_reveal_chance: 0.7,
 
 	item_max_rating: 10,
 	items_initial: 8,
@@ -89,7 +90,11 @@ function play() {
 	        }
 	    } else {
 	        if (adventurer_faction === "rebels") {
-		    phrase = randItem(text.compromise_phrases)
+                    if (Math.random() < game.options.compromise_reveal_chance) {
+		        phrase = randItem(text.compromise_phrases)
+                    } else {
+                        phrase = randItem(text.cryptic_phrases)
+                    }
 	        } else if (adventurer_faction === "loyalists") {
 		    phrase = randItem(text.cryptic_phrases)
 	        }
