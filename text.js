@@ -9,7 +9,7 @@ let text = {
         "The Loyalists are always working to crack the code, and some days the code word will be compromised. Your fellow Rebels will try to communicate this to you discreetly; pay attention to what they have to say.",
         "Give your best equipment to your Rebel allies and your worst to the Loyalist scum, and hope that the Rebels succeed in their missions and overthrow the monarchy."
     ],
-    "code_words": ["jackalopes", "carnations", "lilies", "poppies", "wheat", "onions", "Gambian sidling bushes"],
+    "code_words": ["jackalopes", "carnations", "lilies", "wheat", "onions"],
     "cryptic_phrases": ["I saw some * outside today. They were very beautiful.", "Have you bought any * at the market lately?", "The king has taken a fancy to *. You should find some for him.", "I'm looking for some *; if you find any, let me know.", "I love the smell of * in the morning.", "If you're free later, I have some * for you to look at.", "Don't you think some * would be great right now?", "I'm a big fan of *. Don't tell my husband.", "Are you interested in some *? I know where you can get some.", "This is the perfect time for some *, don't you think?"],
     "compromise_phrases": ["Don't buy any * today. They're spoiled.", "We got a bad shipment of * today. We had to send it back.", "The * weren't outside today. Very unfortunate.", "The * have fled. The day is ruined.", "If you see any * today, don't approach them. They're poisonous."],
     "new_shipment": "You get a new shipment of items.",
