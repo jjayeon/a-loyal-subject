@@ -23,7 +23,7 @@ const game = {
 	rebels_per_day: 2,
 	loyalists_per_day: 4,
 	random_per_day: 1,
-        rebel_chance: 0.2,
+        rebel_chance: 0.4,
 
         rebels_days_to_win: 3,
 	loyalists_days_to_win: 4,
